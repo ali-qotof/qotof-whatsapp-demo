@@ -1,0 +1,56 @@
+databases:
+  - name: qotof-whatsapp-demo-db
+    databaseName: qotof_whatsapp_demo
+    user: qotof_demo
+    plan: free
+
+services:
+  - type: web
+    name: qotof-whatsapp-demo
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /api/health/
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com"
+      - key: DJANGO_SECURE_SSL_REDIRECT
+        value: "1"
+      - key: DJANGO_SECURE_HSTS_SECONDS
+        value: "0"
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: qotof-whatsapp-demo-db
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: qotof-whatsapp-demo-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: qotof-whatsapp-demo-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: qotof-whatsapp-demo-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: qotof-whatsapp-demo-db
+          property: port
+      - key: WHATSAPP_SIMULATION_MODE
+        value: "1"
+      - key: SEED_DEMO_DATA
+        value: "1"
+      - key: DEMO_ADMIN_PASSWORD
+        value: "DemoAdmin123!"
+      - key: GUNICORN_WORKERS
+        value: "2"
+      - key: GUNICORN_THREADS
+        value: "2"
